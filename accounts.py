@@ -1,17 +1,23 @@
 import re
+import pathlib
 
 def get_credentials_file():
-    f = open('Credentials/Credentials.txt','r')
+    path = str(pathlib.Path(__file__).parent.absolute())
+    f = open(path + '/Credentials/Credentials.txt','r')
     content = f.read()
     f.close()
     return content
 
 def access_db():
+    path = str(pathlib.Path(__file__).parent.absolute())
     import gspread
     from oauth2client.service_account import ServiceAccountCredentials
 
-    scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name('Credentials/google_credentials.json',scope)
+    scope = ["https://spreadsheets.google.com/feeds", \
+        'https://www.googleapis.com/auth/spreadsheets', \
+        "https://www.googleapis.com/auth/drive.file", \
+        "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_name(path + '/Credentials/google_credentials.json',scope)
     client = gspread.authorize(creds)
     database = client.open("WSB Trading")
 

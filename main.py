@@ -5,6 +5,7 @@ from google.cloud import language
 
 import accounts
 import db_man
+import user_views
 
 def reddit_submissions_data(reddit):
     for submission in reddit.subreddit("wallstreetbets").hot(limit=10):
@@ -16,7 +17,7 @@ def reddit_submissions_data(reddit):
     elif  re.findall('GME|PLTR',submission.selftext):
         print('\t {} was found in {}'.format(re.findall('GME|PLTR',
             submission.title), submission.title))
-def analyze_from_reddit():
+def analyze_from_reddit(reddit):
     for submission in reddit.subreddit('wallstreetbets').hot(limit=10):
         language_analysis(submission.selftext)
 def language_analysis(text):
@@ -34,4 +35,4 @@ if __name__ == '__main__':
     # language_analysis(
     #     'this is text test'
     # )
-    stock = db_man.stock('AAPL')
+    user_views.run()

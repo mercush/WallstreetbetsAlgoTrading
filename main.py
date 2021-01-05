@@ -1,8 +1,10 @@
 import praw
 import alpaca_trade_api as tradeapi
 import re
-import accounts
 from google.cloud import language
+
+import accounts
+import db_man
 
 def reddit_submissions_data(reddit):
     for submission in reddit.subreddit("wallstreetbets").hot(limit=10):
@@ -26,12 +28,10 @@ def language_analysis(text):
     print('Sentiment: {}, {}'.format(sentiment.score,sentiment.magnitude))
     return 0
 if __name__ == '__main__':
-    reddit = accounts.access_reddit()
-    alpaca = accounts.access_alpaca()
-    sheet = accounts.access_google()
-    reddit_submissions_data(reddit)
-    print(sheet.get_all_records())
-    language_analysis(
-        'this is text test'
-    )
-
+    # reddit = accounts.access_reddit()
+    # alpaca = accounts.access_alpaca()
+    # reddit_submissions_data(reddit)
+    # language_analysis(
+    #     'this is text test'
+    # )
+    stock = db_man.stock('AAPL')

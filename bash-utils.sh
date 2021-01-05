@@ -19,7 +19,7 @@ then
         echo "no venv found or no bashrc"
     fi
     echo "make sure to only run setup once"
-elif [ "$1" == "r" ]; 
+elif [ "$1" == "r" ];
 then
     source ${DIR}/venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"

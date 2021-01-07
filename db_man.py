@@ -24,9 +24,12 @@ class user:
         self.accuracy = user_dict['Accuracy']
 
 def update_db():
-    return 0
-    #check market hours 
-    #go through each stock in the database
-    #match price to alpaca 
-    #update stock price for each ticker 
-    #iterate through stocks in database
+    database = accounts.access_db()
+    stock_db = database.sheet1
+    alp = tradeapi.REST()
+
+    for stock_in_db in stock_db.get_all_records():
+        ticker = stock_in_db['Ticker'] 
+        barset = alp.get_barset(ticker.value, ' day', limit=1)
+        stock_bar = barset[ticker]
+        database.update_cell(ticker.row, ticker.col + 2, stock_bar.c)

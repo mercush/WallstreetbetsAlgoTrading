@@ -30,7 +30,7 @@ def convert_string_to_list(string_input):
     return re.split(r'["\'], ["\']',string_input.strip('[\'" ]'))
 def update_db():
     database = accounts.access_db()
-    stock_db = database.sheet1
+    stock_db = database.worksheet('Stocks')
     alp = accounts.access_alpaca()
 
     for stock_in_db in stock_db.get_all_records():

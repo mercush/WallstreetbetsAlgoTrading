@@ -18,7 +18,7 @@ class user:
         user_db = database.sheet2
         for user_in_db in user_db.get_all_records():
             if user_in_db['Username'] == username:
-                userf_dict = user_in_db
+                user_dict = user_in_db
                 break
         self.username = username
         self.accuracy = user_dict['Accuracy']
@@ -26,10 +26,11 @@ class user:
 def update_db():
     database = accounts.access_db()
     stock_db = database.sheet1
-    alp = tradeapi.REST()
+    alp = accounts.access_alpaca()
 
     for stock_in_db in stock_db.get_all_records():
         ticker = stock_in_db['Ticker'] 
-        barset = alp.get_barset(ticker.value, ' day', limit=1)
+        barset = alp.get_barset(ticker, ' day', limit=1)
         stock_bar = barset[ticker]
-        database.update_cell(ticker.row, ticker.col + 2, stock_bar.c)
+        print(stock_bar)
+        stock_db.update_cell(ticker.row, ticker.col + 2, stock_bar.c)

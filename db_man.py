@@ -1,5 +1,6 @@
 import accounts
 import alpaca_trade_api as tradeapi
+import re
 class stock:
     def __init__(self, ticker):
         database = accounts.access_db()

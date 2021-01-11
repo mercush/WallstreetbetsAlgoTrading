@@ -2,6 +2,15 @@
 import curses
 import accounts
 
+from google.cloud import language
+
+def language_analysis(text):
+    client = language.LanguageServiceClient()
+    document = language.Document(content=text,type_=language.Document.Type.PLAIN_TEXT)
+    sentiment = client.analyze_sentiment(request={'document':document}).document_sentiment
+
+    return sentiment.score
+
 def print_menu(stdscr, menu, selected_row_idx):
     stdscr.clear()
     h, w = stdscr.getmaxyx()
@@ -19,11 +28,12 @@ def print_menu(stdscr, menu, selected_row_idx):
 def stocks_views(stdscr):
     stdscr.clear()
     h, w = stdscr.getmaxyx()
-    columns = 4
+    columns = 5
     stdscr.addstr(0,0,'Ticker')
-    stdscr.addstr(0, w//columns,'Sentiment')
-    stdscr.addstr(0,2*w//columns,'Position')
-    stdscr.addstr(0,3*w//columns,'Current Price')
+    stdscr.addstr(0, w//columns,'Avg. Sent.')
+    stdscr.addstr(0, 2*w//columns,'Sent. Std. Dev.')
+    stdscr.addstr(0,3*w//columns,'Position')
+    stdscr.addstr(0,4*w//columns,'Current Price')
     stdscr.refresh()
     database = accounts.access_db()
     stocks_list = database.worksheet('Stocks').get_all_records()
@@ -37,12 +47,21 @@ def stocks_views(stdscr):
             y = 1 + idx
             stdscr.addstr(y,x,row)
     stocks_sentiments = [
-        str(stock['Sentiment'])
+        str(stock['Avg. Sent.'])
         for stock in stocks_list
         ]
     for idx, row in enumerate(stocks_sentiments):
         if idx < h-1:
             x = w//columns
+            y = 1 + idx
+            stdscr.addstr(y,x,row)
+    stocks_sentiment_stddev = [
+        stock['Sent. Std. Dev.']
+        for stock in stocks_list
+        ]
+    for idx, row in enumerate(stocks_sentiment_stddev):
+        if idx < h-1:
+            x = 2*w//columns
             y = 1 + idx
             stdscr.addstr(y,x,row)
     stocks_positions = [
@@ -51,7 +70,7 @@ def stocks_views(stdscr):
         ]
     for idx, row in enumerate(stocks_positions):
         if idx < h-1:
-            x = 2*w//columns
+            x = 3*w//columns
             y = 1 + idx
             stdscr.addstr(y,x,row)
     stocks_prices = [
@@ -60,7 +79,7 @@ def stocks_views(stdscr):
         ]
     for idx, row in enumerate(stocks_prices):
         if idx < h-1:
-            x = 3*w//columns
+            x = 4*w//columns
             y = 1 + idx
             stdscr.addstr(y,x,row)
     key = stdscr.getch()
@@ -83,9 +102,9 @@ def portfolio_views(stdscr):
 def posts_views(stdscr):
     stdscr.clear()
     related_tickers = ['PLTR, GME', 'AMZN, TSLA','BA', 'BABA']
-    sentiment = ['0','0','0','0']
     h, w = stdscr.getmaxyx()
     columns = 3
+    rows = 10
     stdscr.addstr(0,0,'Post')
     stdscr.addstr(0, w//columns,'Related Tickers')
     stdscr.addstr(0,2*w//columns,'Sentiment')
@@ -93,16 +112,19 @@ def posts_views(stdscr):
 
     reddit = accounts.access_reddit()
     posts_titles_text = []
-    for submission in reddit.subreddit('wallstreetbets').hot(limit=100):
+    sentiment = []
+
+    for submission in reddit.subreddit('wallstreetbets').hot(limit=rows):
         posts_titles_text.append([submission.title, submission.selftext])
+
+    for idx, post in enumerate(posts_titles_text):
+        sentiment.append(str(language_analysis(post[1])))
 
     current_row_idx = 0
     while 1: 
         stdscr.clear()
-        related_tickers = ['PLTR, GME', 'AMZN, TSLA','BA', 'BABA']
-        sentiment = ['0','0','0','0']
         h, w = stdscr.getmaxyx()
-        columns = 3
+        columns = 4
         stdscr.addstr(0,0,'Post')
         stdscr.addstr(0, w//columns,'Related Tickers')
         stdscr.addstr(0,2*w//columns,'Sentiment')
@@ -138,7 +160,7 @@ def posts_views(stdscr):
         key = stdscr.getch()
         if key == curses.KEY_UP and current_row_idx >= 1:
             current_row_idx -= 1
-        elif key == curses.KEY_DOWN and current_row_idx < h-2:
+        elif key == curses.KEY_DOWN and current_row_idx < h-2 and current_row_idx < rows-1:
             current_row_idx += 1
         elif key == curses.KEY_BACKSPACE:
             break

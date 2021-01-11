@@ -23,7 +23,7 @@ def stocks_views(stdscr):
     stdscr.addstr(0,0,'Ticker')
     stdscr.addstr(0, w//columns,'Sentiment')
     stdscr.addstr(0,2*w//columns,'Position')
-    stdscr.addstr(0,3*w//columns,'Price')
+    stdscr.addstr(0,3*w//columns,'Current Price')
     stdscr.refresh()
     database = accounts.access_db()
     stocks_list = database.worksheet('Stocks').get_all_records()
@@ -55,7 +55,7 @@ def stocks_views(stdscr):
             y = 1 + idx
             stdscr.addstr(y,x,row)
     stocks_prices = [
-        str(stock['Price'])
+        str(stock['Current Price'])
         for stock in stocks_list
         ]
     for idx, row in enumerate(stocks_prices):
@@ -90,11 +90,13 @@ def posts_views(stdscr):
     stdscr.addstr(0, w//columns,'Related Tickers')
     stdscr.addstr(0,2*w//columns,'Sentiment')
     stdscr.refresh()
+
     reddit = accounts.access_reddit()
-    current_row_idx = 0
     posts_titles_text = []
-    for submission in reddit.subreddit('wallstreetbets').hot(limit=10):
+    for submission in reddit.subreddit('wallstreetbets').hot(limit=100):
         posts_titles_text.append([submission.title, submission.selftext])
+
+    current_row_idx = 0
     while 1: 
         stdscr.clear()
         related_tickers = ['PLTR, GME', 'AMZN, TSLA','BA', 'BABA']
@@ -136,7 +138,7 @@ def posts_views(stdscr):
         key = stdscr.getch()
         if key == curses.KEY_UP and current_row_idx >= 1:
             current_row_idx -= 1
-        elif key == curses.KEY_DOWN and current_row_idx < len(posts_titles_text)-1:
+        elif key == curses.KEY_DOWN and current_row_idx < h-2:
             current_row_idx += 1
         elif key == curses.KEY_BACKSPACE:
             break
@@ -146,7 +148,7 @@ def posts_views(stdscr):
 def single_post_view(stdscr,posts_titles_text):
     stdscr.clear()
     stdscr.addstr(0,0, posts_titles_text[0])
-    stdscr.addstr(5,0, posts_titles_text[1][0:1000])
+    stdscr.addstr(5,0, posts_titles_text[1][0:800])
     key = stdscr.getch()
     stdscr.refresh()
     while key not in [curses.KEY_BACKSPACE]:

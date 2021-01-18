@@ -4,7 +4,7 @@ import re
 from google.cloud import language
 
 import accounts
-import db_man
+from db_man import *
 import user_views
 
 def reddit_submissions_data(reddit):
@@ -35,4 +35,5 @@ if __name__ == '__main__':
     # language_analysis(
     #     'this is text test'
     # )
-    user_views.run()
+    update_stock('2019-04-15T09:30:00-4:00', 10)
+    user_views.run()  

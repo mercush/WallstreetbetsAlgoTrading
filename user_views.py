@@ -55,7 +55,7 @@ def stocks_views(stdscr):
             y = 1 + idx
             stdscr.addstr(y,x,row)
     stocks_prices = [
-        str(stock['Price'])
+        str(stock['Current Price'])
         for stock in stocks_list
         ]
     for idx, row in enumerate(stocks_prices):

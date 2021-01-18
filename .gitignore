@@ -131,3 +131,5 @@ dmypy.json
 # Other Files
 Credentials/Credentials.txt
 Credentials/google_credentials.json
+
+.DS_Store

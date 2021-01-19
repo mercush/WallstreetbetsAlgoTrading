@@ -24,6 +24,9 @@ then
     source ${DIR}/venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"
     python3 ${DIR}/main.py
+elif [ "$1" == "v" ];
+then 
+    source ${DIR}/venv/bin/activate
 else
-    echo "not an option. Please use \"s\" for setup or \"r\" for run"
+    echo "not an option. Please use \"s\", setup or \"r\" for run, or \"v\" for virtual environment"
 fi

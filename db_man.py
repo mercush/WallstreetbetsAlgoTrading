@@ -24,7 +24,6 @@ class user:
                 break
         self.username = username
         self.accuracy = user_dict['Accuracy']
-<<<<<<< HEAD
 
 def update_current_price():
     import market_data

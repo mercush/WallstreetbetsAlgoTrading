@@ -10,9 +10,9 @@ then
     python3 -m virtualenv ./venv/
     echo "virtual environment set up"
     source ${DIR}/venv/bin/activate
-    pip install -r requirements.txt
     if [ -d ${DIR}/venv -a -f ~/.bashrc ];
     then 
+	pip3 install -r requirements.txt
         echo "alias wsb-utils=\"bash ${DIR}/bash-utils.sh\"" >> ~/.bashrc
         echo "aliased \"wsb-utils\""
     else
@@ -23,7 +23,7 @@ elif [ "$1" == "r" ];
 then
     source ${DIR}/venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"
-    python ${DIR}/main.py
+    python3 ${DIR}/main.py
 else
     echo "not an option. Please use \"s\" for setup or \"r\" for run"
 fi

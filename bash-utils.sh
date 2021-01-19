@@ -1,5 +1,5 @@
 #!/bin/bash
-# This is to replace what would be a makefile in other projects.
+# g is for GUI, r is to run, s is for setup
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [ "$1" == "s" ];
@@ -19,14 +19,14 @@ then
         echo "no venv found or no bashrc"
     fi
     echo "make sure to only run setup once"
-elif [ "$1" == "r" ];
+elif [ "$1" == "g" ];
 then
     source ${DIR}/venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"
     python3 ${DIR}/main.py
-elif [ "$1" == "v" ];
+elif [ "$1" == "r" ];
 then 
-    source ${DIR}/venv/bin/activate
+    python3 ${DIR}/test.py &
 else
-    echo "not an option. Please use \"s\", setup or \"r\" for run, or \"v\" for virtual environment"
+    echo "not an option. Use g,r"
 fi

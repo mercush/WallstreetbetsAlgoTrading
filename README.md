@@ -1,6 +1,10 @@
 # WallstreetbetsAlgoTrading
 Trades based on sentiment analysis from reddit.com/wallstreetbets
 
+## An Update
+1. `vim ~/.bashrc`
+2. Go to the very bottom and you'll see something like "alias wsb-utils ..."
+3. Replace `bash ${DIR}/bash-utils` with `source ${DIR}/bash-utils`
 ## Getting Started: 
 1. Make sure you have virtualenv and gpg installed. It's probably `pip3 install virtualenv`
 2. `bash ./bash-utils.sh s`

@@ -34,5 +34,5 @@ elif [ "$1" == "v" ];
 then
     source ${DIR}/venv/bin/activate
 else
-    echo "not an option. Use g,r"
+    echo "not an option. Use r, v"
 fi

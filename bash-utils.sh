@@ -1,5 +1,5 @@
 #!/bin/bash
-# g is for GUI, r is to run, s is for setup
+# r is for run, s is for setup, v is for virtualenv
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [ "$1" == "s" ];
@@ -26,10 +26,10 @@ then
     python3 ${DIR}/main.py
 elif [ "$1" == "r" ];
 then
-    source ${DIR}/venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"    
-    python3 ${DIR}/persistent_update.py &
-    python3 ${DIR}/main.py
+    source ${DIR}/venv/bin/activate && python3 ${DIR}/persistent_update.py &
+    source ${DIR}/venv/bin/activate && python3 ${DIR}/main.py
+    deactivate
 elif [ "$1" == "v" ];
 then
     source ${DIR}/venv/bin/activate

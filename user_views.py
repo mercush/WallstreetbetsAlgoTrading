@@ -112,19 +112,16 @@ def posts_views(stdscr):
 
     reddit = accounts.access_reddit()
     posts_titles_text = []
-    sentiment = []
 
     for submission in reddit.subreddit('wallstreetbets').hot(limit=rows):
         posts_titles_text.append([submission.title, submission.selftext])
 
-    for idx, post in enumerate(posts_titles_text):
-        sentiment.append(str(language_analysis(post[1])))
-
     current_row_idx = 0
+    sentiment_values = []
     while 1: 
         stdscr.clear()
         h, w = stdscr.getmaxyx()
-        columns = 4
+        columns = 3
         stdscr.addstr(0,0,'Post')
         stdscr.addstr(0, w//columns,'Related Tickers')
         stdscr.addstr(0,2*w//columns,'Sentiment')
@@ -152,11 +149,15 @@ def posts_views(stdscr):
                 x = w//columns
                 y = 1 + idx
                 stdscr.addstr(y,x,row)
-        for idx, row in enumerate(sentiment):
-            if idx < h-1:
+        stdscr.refresh()
+        if not sentiment_values:
+            sentiment_values = calculate_render_sentiment(stdscr, posts_titles_text, h, w, columns)
+        else:
+            for idx, row in enumerate(sentiment_values):
                 x = 2*w//columns
                 y = 1 + idx
-                stdscr.addstr(y,x,row)
+                stdscr.addstr(y,x,sentiment_values[idx])
+                stdscr.refresh()
         key = stdscr.getch()
         if key == curses.KEY_UP and current_row_idx >= 1:
             current_row_idx -= 1
@@ -165,12 +166,23 @@ def posts_views(stdscr):
         elif key == curses.KEY_BACKSPACE:
             break
         elif key in [curses.KEY_ENTER, 10, 13]:
-            single_post_view(stdscr, posts_titles_text[current_row_idx])
-
-def single_post_view(stdscr,posts_titles_text):
+            single_post_view(stdscr, posts_titles_text[current_row_idx], h, w)
+def calculate_render_sentiment(stdscr,posts_titles_text, height, width, columns):
+    sentiment = []
+    for idx, row in enumerate(posts_titles_text):
+        sentiment.append(str(language_analysis(row[1])))
+        if idx < height-1:
+            x = 2*width//columns
+            y = 1 + idx
+            stdscr.addstr(y,x,sentiment[idx])
+            stdscr.refresh()
+        else:
+            break
+    return sentiment
+def single_post_view(stdscr,posts_titles_text, height, width):
     stdscr.clear()
     stdscr.addstr(0,0, posts_titles_text[0])
-    stdscr.addstr(5,0, posts_titles_text[1][0:800])
+    stdscr.addstr(5,0, posts_titles_text[1][0:width*(height-5)]) #This is sometimes too long
     key = stdscr.getch()
     stdscr.refresh()
     while key not in [curses.KEY_BACKSPACE]:

@@ -182,7 +182,7 @@ def calculate_render_sentiment(stdscr,posts_titles_text, height, width, columns)
 def single_post_view(stdscr,posts_titles_text, height, width):
     stdscr.clear()
     stdscr.addstr(0,0, posts_titles_text[0])
-    stdscr.addstr(5,0, posts_titles_text[1][0:width*(height-5)]) #This is sometimes too long
+    stdscr.addstr(5,0, posts_titles_text[1][0:800]) #This is sometimes too long
     key = stdscr.getch()
     stdscr.refresh()
     while key not in [curses.KEY_BACKSPACE]:

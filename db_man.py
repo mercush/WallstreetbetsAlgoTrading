@@ -3,7 +3,7 @@ import market_data
 class stock:
     from accounts import access_db
     def __init__(self, ticker):
-        database = accounts.access_db()
+        database = access_db()
         stock_db = database.sheet1
         for stock_in_db in stock_db.get_all_records():
             if stock_in_db['Ticker'] == ticker:
@@ -24,11 +24,9 @@ class user:
                 break
         self.username = username
         self.accuracy = user_dict['Accuracy']
-
-def update_current_price():
-    import market_data
-    from accounts import access_db
     
+def update_sentiment()
+
 
 def update_stock(date, num_bars): #date in ISO format
     from accounts import access_db

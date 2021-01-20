@@ -1,18 +1,21 @@
 
 def time_to_market_close():
-    from accounts import access_alpaca
-    clock = access_alpaca.get_clock()
+    import accounts
+    api = accounts.access_alpaca()
+    clock = api.get_clock()
     return (clock.next_close - clock.timestamp).total_seconds()
 
 def is_market_open():
     from accounts import access_alpaca
-    clock = access_alpaca.get_clock()
+    api = access_alpaca()
+    clock = api.get_clock()
     return(clock.is_open)
 
 
 def past_market_timeframe(date): # date in format year-month-day
     from accounts import access_alpaca
-    calendar = access_alpaca.get_calendar(start=date, end=date)[0]
+    api = access_alpaca()
+    calendar = api.get_calendar(start=date, end=date)[0]
     return (calendar.open, calendar.close)
 
 def get_barsets(ticker, time_start, limit):
@@ -24,3 +27,5 @@ def get_barsets(ticker, time_start, limit):
     bars = barset[ticker]
     print(bars[0].o)
     return barset[ticker]
+
+

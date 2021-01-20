@@ -28,7 +28,7 @@ elif [ "$1" == "r" ];
 then
     source ${DIR}/venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"    
-    python3 ${DIR}/test.py &
+    python3 ${DIR}/persistent_update.py &
     python3 ${DIR}/main.py
 elif [ "$1" == "v" ];
 then

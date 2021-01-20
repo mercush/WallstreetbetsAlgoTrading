@@ -13,7 +13,7 @@ then
     if [ -d ${DIR}/venv -a -f ~/.bashrc ];
     then 
 	pip3 install -r requirements.txt
-        echo "alias wsb-utils=\"bash ${DIR}/bash-utils.sh\"" >> ~/.bashrc
+        echo "alias wsb-utils=\"source ${DIR}/bash-utils.sh\"" >> ~/.bashrc
         echo "aliased \"wsb-utils\""
     else
         echo "no venv found or no bashrc"
@@ -25,8 +25,14 @@ then
     export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"
     python3 ${DIR}/main.py
 elif [ "$1" == "r" ];
-then 
+then
+    source ${DIR}/venv/bin/activate
+    export GOOGLE_APPLICATION_CREDENTIALS="${DIR}/Credentials/google_credentials.json"    
     python3 ${DIR}/test.py &
+    python3 ${DIR}/main.py
+elif [ "$1" == "v" ];
+then
+    source ${DIR}/venv/bin/activate
 else
     echo "not an option. Use g,r"
 fi
